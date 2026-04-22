@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/feedback/route": "app/api/feedback/route.js",
+  "/api/daily/route": "app/api/daily/route.js",
+  "/api/topics/route": "app/api/topics/route.js",
+  "/api/upgrade/route": "app/api/upgrade/route.js",
+  "/api/sos-ideas/route": "app/api/sos-ideas/route.js",
+  "/page": "app/page.js",
+  "/tache3/page": "app/tache3/page.js",
+  "/tache2/page": "app/tache2/page.js",
+  "/daily/page": "app/daily/page.js"
+}
