@@ -4,13 +4,9 @@ import { createServerClient } from '@/lib/supabase'
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const taskType = searchParams.get('task') ?? 'tache3'
+  const topicId = searchParams.get('topicId')
 
   const client = createServerClient()
-
-  // Get today's topic (rotate daily by day-of-year)
-  const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
-  )
 
   const { data: topics } = await client
     .from('topics')
@@ -23,7 +19,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Aucun sujet trouvé' }, { status: 404 })
   }
 
-  const topic = topics[dayOfYear % topics.length]
+  // If topicId is provided, use that topic — otherwise fall back to daily rotation
+  let topic = topics[0]
+  if (topicId) {
+    const found = topics.find((t) => t.id === topicId)
+    if (!found) {
+      return NextResponse.json({ error: 'Sujet introuvable' }, { status: 404 })
+    }
+    topic = found
+  } else {
+    const dayOfYear = Math.floor(
+      (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
+    )
+    topic = topics[dayOfYear % topics.length]
+  }
 
   // Get ideas for this topic
   const { data: ideas } = await client

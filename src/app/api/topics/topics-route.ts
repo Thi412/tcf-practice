@@ -6,12 +6,17 @@ export async function GET(request: NextRequest) {
   const taskType = searchParams.get('task') ?? 'tache3'
 
   const client = createServerClient()
-  const { data: topics } = await client
+
+  const { data: topics, error } = await client
     .from('topics')
     .select('id, task_type, question, theme, difficulty')
     .eq('task_type', taskType)
     .eq('is_active', true)
     .order('theme')
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   return NextResponse.json({ topics: topics ?? [] })
 }
